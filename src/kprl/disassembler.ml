@@ -23,7 +23,7 @@ open ExtString
 open Ulexing
 open KfnTypes
 
-let debug = 
+let debug =
 	(fun () -> !App.verbose)
 
 (* The actual ISet module appears to have issues. :/ *)
@@ -329,6 +329,22 @@ let printbytes lexbuf n1 =
 		readbytes_h n1
 		
 
+let printbytes lexbuf n1 =
+	if n1 < 0 then ""
+	else
+		let rec readbytes_h n = (
+			match n with
+				| 0 -> ""
+				| _ -> let f = (lexer
+							| eof -> " eof"
+							| _ -> (let c = (lexeme_char lexbuf 0) in
+									let s = sprintf "0x%02x " c ^ readbytes_h (n - 1) in
+									rollback lexbuf;
+									s)) in
+							f lexbuf) in
+		readbytes_h n1
+
+
 let error lexbuf s =
 	try
 		ksprintf sysError "%s near 0x%06x" (Text.sjs_to_err s) (lexeme_start lexbuf + !data_offset)
@@ -384,13 +400,13 @@ let peek =
 
 (* Expressions. *)
 
-let dp s = 
+let dp s =
 	if debug() > 1 then printf "%s%!" s
 
-let pns s = 
+let pns s =
 	dp (sprintf "%s\n" s);
 	s
-	
+
 let variable_name lexbuf c =
 	let decode =  function
     | 0x0a -> Config.svar_prefix ^ "K"   | 0x0b -> Config.ivar_prefix ^ "L"
@@ -435,7 +451,7 @@ let rec get_expr_token lexbuf =
     | [^ 0xc8 0xff] '['
       -> let i = variable_name lexbuf (lexeme_char lexbuf 0) in
 		let e = get_expression lexbuf in
-			(try 
+			(try
 				expect lexbuf ']' "get_expr_token";
 				sprintf "%s[%s]" i e
 			with
@@ -453,7 +469,7 @@ and get_expr_term lexbuf =
 	    | "\\\000" -> (* Unary plus?  We ignore it, anyway. *) get_expr_term lexbuf
 	    | "\\\001" -> `Minus (get_expr_term lexbuf)
 	    | "(" -> let c = get_expr_bool lexbuf in
-			(try 
+			(try
 				expect lexbuf ')' "get_expr_term";
 				c
 			with
@@ -521,7 +537,7 @@ and get_expr_bool lexbuf =
 		loop_or (loop_and (get_expr_cond lexbuf) lexbuf) lexbuf
 	with
 		| Optpp.Trace (s, n)  -> Optpp.contTrace s n "get_expr_bool"
-	
+
 
 and get_expression =
   let op_string x =
@@ -575,7 +591,7 @@ and get_expression =
 		traverse (get_expr_bool lexbuf)
 	with
 		| Optpp.Trace (s, n)  -> Optpp.contTrace s n "get_expression"
-		
+
 
 and get_assignment cmd =
   let op =
@@ -584,7 +600,7 @@ and get_assignment cmd =
       | _ -> ksprintf (error lexbuf) "expected 0x5c[14-1e], found 0x%02x in get_assignment" (lexeme_char lexbuf 0)
   in fun lexbuf ->
     let itok = try get_expr_token lexbuf with | Optpp.Trace (s, n) -> Optpp.contTrace s n "get_assignment" in
-    let op = op lexbuf in	
+    let op = op lexbuf in
     let etok = try get_expression lexbuf with | Optpp.Trace (s, n) -> Optpp.contTrace s n (sprintf "get_assignment: %s %s= " itok op) in
     (* Check for assignments to/from STORE and fake return values as appropriate *)
     let unstored =

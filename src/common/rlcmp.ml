@@ -33,14 +33,14 @@ let key = ref [|0xAF ; 0x2F ; 0xFB ; 0x6B ; 0xAF ; 0x30 ; 0x77 ; 0x17 ; 0x87 ; 0
 
 let set_key verbose s1 =
 	if not ((String.length s1) = 32) then Optpp.usageError "key must be 32 characters";
-	let rec loop s n = 
+	let rec loop s n =
 		match String.length s with
 			| 0 -> ()
 			| _ -> Array.set !key n (int_of_string ("0x" ^ (String.sub s 0 2)));
 			if verbose() then
 				printf "0x%02X " (Array.get !key n);
 			loop (String.sub s 2 ((String.length s) - 2)) (n+1) in
-			
+
 			if verbose() then
 				printf "  Key set to: ";
 			loop s1 0;

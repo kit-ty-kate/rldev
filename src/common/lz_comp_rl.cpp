@@ -58,7 +58,7 @@ static uchar xor_mask[] = {
     0x7c, 0x00, 0xad, 0xf4
 };*/
 // static uchar xor_mask_2[] = {
-    // 0xAF, 0x2F, 0xFB, 0x6B, 0xAF, 0x30, 0x77, 0x17, 0x87, 0x48, 0xFE, 0x2C, 
+	// 0xAF, 0x2F, 0xFB, 0x6B, 0xAF, 0x30, 0x77, 0x17, 0x87, 0x48, 0xFE, 0x2C, 
 	// 0x68, 0x1A, 0xB9, 0xF0
 // };
 
@@ -77,7 +77,7 @@ value rl_prim_apply_mask (value array, value origin)
 value rl_prim_decompress (value src_in, value dst_in, value use_xor_2, value key)
 {
     CAMLparam4(src_in, dst_in, use_xor_2, key);
-	
+
 	uchar *xor_mask_2 = Binarray_val(key);
     int bit = 1;
     uchar *src = Binarray_val(src_in);
@@ -113,7 +113,7 @@ value rl_prim_decompress (value src_in, value dst_in, value use_xor_2, value key
     }
     if (Bool_val(use_xor_2)) {
 		dst = dststart + 256;
-		for (int i = 0; i < 257; ++i) {	
+		for (int i = 0; i < 257; ++i) {
 			if(dst > dstend)
 				break;
 			*dst++ ^= xor_mask_2[i % 16];
@@ -131,16 +131,16 @@ value rl_prim_compress (value src_in, value use_xor_2, value key)
     uchar *src = Binarray_val(src_in);
     uchar *srcstart = src;
     uchar *srcend = src + Bigarray_val(src_in)->dim[0];
-	
+
     if (Bool_val(use_xor_2)) {
 		src = srcstart + 256;
-		for (int i = 0; i < 257; ++i) {	
+		for (int i = 0; i < 257; ++i) {
 			if(src > srcend)
 				break;
 			*src++ ^= xor_mask_2[i % 16];
 		}
     }
-	
+
     Compress<CInfoRealLive, Container::RLDataContainer> cmp;
     cmp.WriteData ((char *)srcstart, Bigarray_val(src_in)->dim[0]);
     cmp.WriteDataEnd();

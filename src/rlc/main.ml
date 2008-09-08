@@ -28,6 +28,9 @@ let set_target s =
 let set_compiler_version s =
 	KeTypes.compiler_version := int_of_string s
 
+let set_compiler_version s =
+	KeTypes.compiler_version := int_of_string s
+
 let enum_of_array a = (* stolen from DynArray.enum, remove if it makes it into ExtLib *)
     let rec make start =
         let idxref = ref 0 in

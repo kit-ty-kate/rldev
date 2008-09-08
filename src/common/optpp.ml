@@ -130,14 +130,14 @@ exception Trace of string * int
 
 let startTrace s =
 	raise (Trace ((sprintf "%s\nStack Trace:" s), 0))
-	
+
 let contTrace s n sn =
 	let rec gen_space n =
 		match n with
 			| 0 -> ""
-			| _ -> "   " ^ gen_space (n-1) in			
+			| _ -> "   " ^ gen_space (n-1) in
 	raise (Trace ( (s ^ (sprintf "\n") ^ gen_space(n) ^ sn), n+1))
-	
+
 let printTrace s n =
   Format.set_formatter_out_channel stderr;
   cliInfo (sprintf "%s\n%d levels traced" s n)
