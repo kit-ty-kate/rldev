@@ -192,7 +192,7 @@ let options =
           withoutarg = None;
           witharg = Some set_target_version };
     Opt { short = "-y"; long = "key"; argname = "KEY";
-          descr = "Decoder key for compile version 110002 (default is CLANNAD FV)";
+          descr = "Decoder key for compiler version 110002 (default is LB!)";
           withoutarg = None;
           witharg = Some (Rlcmp.set_key (fun () -> !App.verbose > 0)) };
     Opt { short = ""; long = "force-transform"; argname = "ENC";

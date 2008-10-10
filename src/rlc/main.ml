@@ -158,7 +158,7 @@ let options =
           withoutarg = None;
           witharg = Some set_compiler_version };
     Opt { short = "-k"; long = "key"; argname = "";
-          descr = "Decoder key for compile version 110002 (default is CLANNAD FV)";
+          descr = "Decoder key for compiler version 110002 (default is LB!)";
           withoutarg = None;
           witharg = Some (Rlcmp.set_key (fun () -> !App.verbose)) };
   (*Opt { short = "-O"; long = "optimisation"; argname = "LEV";
