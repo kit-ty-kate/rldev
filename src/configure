@@ -84,7 +84,7 @@ prev=
 prefix=/usr/local
 enable_vaconv=true
 enable_rlxml=true
-default_encoding=CP932
+default_encoding=UTF-8
 for opt
 do
   if test -n "$prev"; then
