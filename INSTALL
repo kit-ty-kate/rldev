@@ -28,7 +28,8 @@ following tools and libraries are required:
   Findlib             (http://projects.camlcity.org/projects/findlib.html)
   Omake 0.9.6.8       (http://omake.metaprl.org)
   ExtLib 1.4 or later (http://code.google.com/p/ocaml-extlib/)
-  Ulex                (http://www.cduce.org/download.html#side)
+  Ulex 0.8            (http://www.cduce.org/download.html#side,
+  			http://www.cduce.org/download/old/ulex-0.8.tar.gz)
 
 The vaconv utility has the following additional requirements:
 
