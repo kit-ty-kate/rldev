@@ -1,0 +1,37 @@
+# OCaml build artefacts
+*.cmo
+*.cmx
+*.cmi
+*.o
+*.a
+*.cma
+*.cmxa
+*.output
+
+# OMake artefacts
+/bin
+*.omc
+/src/.omakedb
+/src/.omakedb.lock
+
+# configure artefacts and miscellaneous
+/src/config.inc
+/src/common/config.cfg
+/src/common/mkdatafiles
+
+# ocamllex and ocamlyacc artefacts
+/src/common/castLexer.ml
+/src/common/castParser.ml
+/src/common/castParser.mli
+/src/common/gameLexer.ml
+/src/common/gameParser.ml
+/src/common/gameParser.mli
+/src/common/kfnLexer.ml
+/src/common/kfnParser.ml
+/src/common/kfnParser.mli
+/src/cvtkpacres/lexer.ml
+/src/rlc/iniLexer.ml
+/src/rlc/iniParser.ml
+/src/rlc/iniParser.mli
+/src/rlc/keAstParser.ml
+/src/rlc/keAstParser.mli
