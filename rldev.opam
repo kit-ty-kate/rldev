@@ -8,7 +8,7 @@ bug-reports: "https://github.com/kit-ty-kate/rldev/issues"
 synopsis: "An unofficial development toolkit for AVG2000 and RealLive"
 build: [
   ["sh" "-c" "cd src && ./configure --prefix '%{prefix}%'"]
-  ["sh" "-c" "cd src && omake -j 1"]
+  ["sh" "-c" "cd src && omake -j9999; omake"] # TODO: please fix that
 ]
 install: ["sh" "-c" "cd src && omake install"]
 depends: [
