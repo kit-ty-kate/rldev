@@ -19,7 +19,7 @@
   02111-1307, USA.
 *)
 
-(*pp pa_macro.cmo ./pa_matches.cmo *)
+(*pp camlp4.macro *)
 
 open Printf
 open KeTypes
@@ -127,7 +127,7 @@ let rec compile
   in
 
   let rec parse elt =
-    if !ignore_one_space && not (elt matches `Space _) then ignore_one_space := false;
+    if !ignore_one_space && (match elt with `Space _ -> false | _ -> true) then ignore_one_space := false;
     match elt with
       | `EOS | `Delete _ | `Rewrite _ | `ResRef _ -> assert false
       | `Add elt -> Queue.add elt addstrs
@@ -168,7 +168,7 @@ let rec compile
             Option.may (fun _ -> flush true; Meta.call "FontSize" []) size
       | `Code (loc, id, e, p) when id = Text.of_arr [| 0x73 |] (* \s{} *)
          -> let parm = match p with [`Simple (_, s)] -> s | _ -> error loc "the control code \\s{} must have one and only one parameter" in
-            if not (parm matches `SVar _) then ksprintf (error loc) "Oops, expected string variable but found `%s'" (string_of_expr parm); (* it should, by this stage *)
+            if (match parm with `SVar _ -> false | _ -> true) then ksprintf (error loc) "Oops, expected string variable but found `%s'" (string_of_expr parm); (* it should, by this stage *)
             if e <> None then error loc "the control code \\s{} cannot have a length specifier";
             flush false;
             Meta.call f_append [parm]

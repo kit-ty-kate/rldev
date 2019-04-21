@@ -27,8 +27,6 @@ FILES []=
 
 OCAMLPACKS += str
 
-OCAMLFINDFLAGS = -syntax camlp4o
-
 GENERATED = lexer.ml
 OCamlGeneratedFiles($(GENERATED))
 OCamlProgram($(PROGRAM), $(FILES))

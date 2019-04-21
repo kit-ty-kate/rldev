@@ -21,12 +21,6 @@
 # Uncomment the following line to show debug output from parsers.
 #setenv(DEBUG_PARSERS,true)
 
-# Syntax extension
-if $(not $(file-exists pa_matches.cmo))
-  section eval
-    $(OCAMLC) -c -pp "$(CAMLP4) pa_o.cmo pa_op.cmo pa_extend.cmo q_MLast.cmo pr_dump.cmo" \
-              -I $(shell $(CAMLP4) -where) gramlib.cma pa_matches.ml -o pa_matches.cmo
-
 # Main program
 
 PROGRAM = $(EXEDIR)/rlc
@@ -83,4 +77,3 @@ all: $(PROGRAM)$(EXE)
 
 clean:
   $(RM) *.omc $(GENERATED) *.output $(addsuffixes .cmi .cmo .cmx $(EXT_OBJ),$(FILES)) ocamlyacc-silent.sh
-  $(RM) $(addsuffixes .cmi .cmo,pa_matches)

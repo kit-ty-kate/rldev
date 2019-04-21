@@ -13,13 +13,14 @@ OCAML_LIBRARY_DIR = $(shell $(OCAMLC) -where)
 GetPP(file) =
   PP =
   awk($(file))
+  case $"^[(][*]ulex[*][)]"
+    PP = $(PP) -syntax pa_ulex
+    export
   case $"^[(][*]\(pp\) \(.*\)[*][)]"
-    if $(OCAMLFIND)
-      PP = -syntax camlp4o $(mapprefix -ppopt,$2)
-      export
-    else
-      PP = -pp "camlp4o pa_ulex.cma $2"
-      export
+    PP = $(PP) $(mapprefix -package,$2)
+    export
+  if $(not $(equal $(PP), $(array)))
+    PP = -syntax camlp4o $(PP)
     export
   value $(PP)
 
@@ -125,10 +126,10 @@ GetPP(file) =
         $(OCAMLCFLAGS) $(GetPP $<) $(OCAMLPPFLAGS) $(PREFIXED_OCAMLINCLUDES) -c $<
 
 
-.SCANNER: scan-ocaml-%.mli: %.mli OCamlGeneratedFilesTarget :value: $(OCamlScannerDeps $&)
+.SCANNER: scan-ocaml-%.mli: %.mli OCamlGeneratedFilesTarget :value:
     $(OCAMLFIND) $(OCAMLDEP) $(PREFIXED_OCAMLPACKS) $(OCAMLDEPFLAGS) $(GetPP $<) $(PREFIXED_OCAMLINCLUDES) $<
 
-.SCANNER: scan-ocaml-%.ml: %.ml OCamlGeneratedFilesTarget :exists: %.mli :value: $(OCamlScannerDeps $&)
+.SCANNER: scan-ocaml-%.ml: %.ml OCamlGeneratedFilesTarget :exists: %.mli :value:
     $(OCAMLFIND) $(OCAMLDEP) $(PREFIXED_OCAMLPACKS) $(OCAMLDEPFLAGS) $(GetPP $<) $(PREFIXED_OCAMLINCLUDES) $<
 
 OCamlProgram(name, files) =

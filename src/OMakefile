@@ -18,8 +18,9 @@
 #  Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 
-OCAMLFLAGS = -warn-error Asxyz -cc $(if $(equal $(CXX),gcc),g++,$(CXX))
+OCAMLFLAGS = -unsafe-string -w Asxyz -cc $(if $(equal $(CXX),gcc),g++,$(CXX))
 USE_OCAMLFIND = true
+BYTE_ENABLED = true
 
 if $(defined-env DEBUG)
   echo "Debug mode"

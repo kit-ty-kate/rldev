@@ -18,7 +18,7 @@
    Place - Suite 330, Boston, MA  02111-1307, USA.
 *)
 
-(*pp pa_macro.cmo ./pa_matches.cmo *)
+(*pp camlp4.macro *)
 
 (*DEFINE DEBUG*)
 
@@ -523,7 +523,7 @@ let rec check_and_compile loc funname defs params =
                   if t = "s" then
                     let parm = match p with [`Simple (_, s)] -> s | _ -> error l "the control code \\s{} must have one and only one parameter" in
                     (* By this stage, the parameter SHOULD be a string variable. *)
-                    if not (parm matches `SVar _) then ksprintf (error l) "Oops, expected string variable but found %s" (string_of_expr parm);
+                    if (match parm with `SVar _ -> false | _ -> true) then ksprintf (error l) "Oops, expected string variable but found %s" (string_of_expr parm);
                     if e <> None then error l "the control code \\s{} cannot have a length specifier";
                     (* Append the string. *)
                     flush ();
@@ -582,11 +582,11 @@ let rec check_and_compile loc funname defs params =
         | IntC, `Int
                  -> `Integer (code_of_expr e)
         | Int, `Int
-                 -> if (e matches `Store l | `IVar (l, _, _)) && loc_of_expr e <> Memory.temploc
+                 -> if (match e with `Store l | `IVar (l, _, _) -> true | _ -> false) && loc_of_expr e <> Memory.temploc
                     then `Integer (code_of_expr e)
                     else expected ll ptype "found expression"
         | IntV, `Int
-                 -> if (e matches `Store l | `IVar (l, _, _)) then
+                 -> if (match e with `Store l | `IVar (l, _, _) -> true | _ -> false) then
                       `Integer (code_of_expr e)
                     else 
                       let tv = Memory.get_temp_var `Int "__handle_simple_temp_integer_\000" in
@@ -602,7 +602,7 @@ let rec check_and_compile loc funname defs params =
                     then `String (code_of_expr e)
                     else expected ll ptype "found expression"
         | StrV, (`Str | `Literal)
-                 -> if (e matches `SVar  (l, _, _))
+                 -> if (match e with `SVar  (l, _, _) -> true | _ -> false)
                     then `String (code_of_expr e)
                     else
                       let tv = Memory.get_temp_var `Str "__handle_simple_temp_string_\000" in

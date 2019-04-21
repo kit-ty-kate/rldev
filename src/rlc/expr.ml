@@ -18,8 +18,6 @@
    Place - Suite 330, Boston, MA  02111-1307, USA.
 *)
 
-(*pp ./pa_matches.cmo *)
-
 (* Order of evaluation of functions within an expression, and arguments within
    a function call, is undefined; it will normally be left-to-right, but this
    is NOT guaranteed. *)
@@ -481,7 +479,7 @@ and traverse ?(as_cond = false) ?(keep_unknown_funcs = false) ~reject aux =
             
             | _, `Unary (_, op', e) when op' = op -> e
             | `Sub, e
-               -> let e = if (e matches `Op _) then `Parens (l, e) else e in
+               -> let e = if (match e with `Op _ -> true | _ -> false) then `Parens (l, e) else e in
                   `Unary (l, `Sub, e)
             | `Inv, e 
                -> let e =
@@ -616,7 +614,7 @@ and traverse_str_tokens aux tkns =
          -> let args = List.map (map_func_param (traverse ~reject:`None) aux) p in
             if i = Text.ident "i"
             && Option.default true (Option.map normalised_expr_is_const e)
-            && (args matches [`Simple (_, `Int (_, v))]) then
+            && (match args with [`Simple (_, `Int (_, v))] -> true | _ -> false) then
               (* Expand \i{const} by converting to string *)
               let s =
                 Text.of_sjs
@@ -1190,7 +1188,7 @@ let normalise_funccall (`FuncCall (loc, dest, s_ident, t_ident, params, label)) 
         string_of_expr dest);
 *)
 
-  assert (dest matches None | Some (`Store _));
+  assert (match dest with None | Some (`Store _) -> true | _ -> false);
   let aux = make_transform_aux (`Func (loc, s_ident, t_ident, params, label)) in
   let as_cond =
     try

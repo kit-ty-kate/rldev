@@ -18,7 +18,7 @@
    Place - Suite 330, Boston, MA  02111-1307, USA.
 *)
 
-(*pp pa_macro.cmo ./pa_matches.cmo *)
+(*pp camlp4.macro *)
 
 open Printf
 open KeTypes
@@ -333,7 +333,7 @@ let compile_stub addstrs loc text =
   Output.add_kidoku loc;
   set_quotes true;
   let rec parse elt =
-    if !ignore_one_space && not (elt matches `Space _) then ignore_one_space := false;
+    if !ignore_one_space && (match elt with `Space _ -> false | _ -> true) then ignore_one_space := false;
     match elt with
       | `EOS | `Delete _ | `Rewrite _ | `ResRef _ -> assert false
       | `DQuote _ -> set_quotes true; Buffer.add_string b "\\\""

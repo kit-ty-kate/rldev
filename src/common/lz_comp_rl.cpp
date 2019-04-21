@@ -64,7 +64,7 @@ static uchar xor_mask[] = {
 // };
 
 struct Xor_Key {
-  char key[16];
+  unsigned char key[16];
   int offset;
   int length;
 };

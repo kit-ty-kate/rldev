@@ -17,7 +17,7 @@
    this program; if not, write to the Free Software Foundation, Inc., 59 Temple
    Place - Suite 330, Boston, MA  02111-1307, USA.
 *)
-(*pp pa_macro.cmo ./pa_matches.cmo *)
+(*pp camlp4.macro *)
 
 DEFINE DEBUG_STATEMENTS
 
@@ -668,7 +668,7 @@ and handle_textout next (`Return (l, _, _) as elt) =
        "If you did not intend this expression to be displayed, " ^ 
        "you should precede it with the `return' keyword");
   let dynalin = Text.ident "__DynamicLineation__" in
-  if not (Memory.defined dynalin) || (Memory.get_as_expression dynalin matches `Int (_, 0l))
+  if not (Memory.defined dynalin) || (match Memory.get_as_expression dynalin with `Int (_, 0l) -> true | _ -> false)
   then Textout.compile_stub (l, ret, next)
   else (
     if Memory.defined (Text.ident "__TEXTOUT_KH__")
@@ -703,7 +703,7 @@ and parse_elt elt =
               let last = DynArray.last elts in
               DynArray.delete_last elts;
               DynArray.iter parse_norm_elt elts;
-              if last matches `LoadFile _ | `DConst _ | `Define _
+              if (match last with `LoadFile _ | `DConst _ | `Define _ -> true | _ -> false)
               then (Memory.close_scope (); parse_norm_elt last) (* for declarations, so the declared items aren't hidden. *)
               else (parse_norm_elt last; Memory.close_scope ()) (* general case: so tempvars in funccalls ARE. *)
 
@@ -764,7 +764,7 @@ and parse_norm_elt : statement -> unit =
     | `Select (l, _, _, _, _, _ as f)
        -> let dynalin = Text.ident "__DynamicLineation__" in
           if not (Memory.defined dynalin) 
-          || (Memory.get_as_expression dynalin matches `Int (_, 0l))
+          || (match Memory.get_as_expression dynalin with `Int (_, 0l) -> true | _ -> false)
           || Memory.defined (Text.ident "__TEXTOUT_KH__")
           then Select.compile f
           else if Memory.defined (Text.ident "__RLBABEL_KH__")
@@ -955,7 +955,7 @@ and parse_struct =
                         smts
                     | (_, case) :: cases
                      -> let last = if DynArray.length case > 0 then Some (DynArray.last case) else None in
-                        if last matches Some (`Break _) then (
+                        if (match last with Some (`Break _) -> true | _ -> false) then (
                           DynArray.append (DynArray.sub case 0 (DynArray.length case - 1)) smts;
                           smts
                         ) else (

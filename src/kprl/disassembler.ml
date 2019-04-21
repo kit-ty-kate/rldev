@@ -18,7 +18,8 @@
    Place - Suite 330, Boston, MA  02111-1307, USA.
 *)
 
-(*pp pa_macro.cmo *)
+(*ulex*)
+(*pp camlp4.macro *)
 
 open Optpp
 open Printf
@@ -141,6 +142,7 @@ DEFINE Select      = { op_module = 002 }
 DEFINE Ruby        = { op_module = 003; op_function = 00120 }
 DEFINE Strcpy      = { op_module = 010; op_function = 00000 }
 DEFINE Strcat      = { op_module = 010; op_function = 00002 }
+(* TODO: These are not used because bug: https://github.com/ocaml/camlp4/issues/148 *)
 
 
 (* The fndef type models a function call in its Kepago representation.  To
@@ -2121,7 +2123,7 @@ let read_soft_function mode version cmd opcode argc fndef_gen lexbuf =
   let fndef =
     match fndef_gen with
       | Common def -> def
-      | Versioned defs -> snd (List.find (fun pred, _ -> pred version mode) defs)
+      | Versioned defs -> snd (List.find (fun (pred, _) -> pred version mode) defs)
   in
   let control_code = options.control_codes && fndef.fn_ccode <> "" in
   match fndef.fn_params with None -> read_unknown_function 
@@ -2534,8 +2536,8 @@ let read_function mode version offset opcode argc lexbuf =
            else
              read_select mode cmd opcode argc lexbuf
 *)
-    | Strcpy
-    | Strcat -> expect lexbuf '(' "read_function";
+    | { op_module = 010; op_function = 00000 }
+    | { op_module = 010; op_function = 00002 } -> expect lexbuf '(' "read_function";
                 let a = get_data lexbuf in
                 let b = get_data lexbuf in
                 if opcode.op_overload = 1 then
@@ -2546,7 +2548,7 @@ let read_function mode version offset opcode argc lexbuf =
                 else
                   DynArray.add commands { cmd with kepago = [S (sprintf "%s %s= %s" a (if opcode.op_function = 0 then "" else "+") b)] };
                 expect lexbuf ')' "read_function"
-    | Ruby -> read_ruby cmd argc lexbuf
+    | { op_module = 003; op_function = 00120 } -> read_ruby cmd argc lexbuf
     | _ -> let opstr = string_of_opcode opcode in
            if Hashtbl.mem fndefs opstr then
              try
@@ -2566,7 +2568,7 @@ let read_function mode version offset opcode argc lexbuf =
                    read_unknown_function cmd opstr argc lexbuf
 *)
                  match opcode with
-                   | Select -> read_select mode cmd opcode argc lexbuf
+                   | { op_module = 002 } -> read_select mode cmd opcode argc lexbuf
                    | _ -> read_unknown_function cmd opstr argc lexbuf
            else
 (*           
@@ -2579,7 +2581,7 @@ let read_function mode version offset opcode argc lexbuf =
                read_unknown_function cmd opstr argc lexbuf
 *)
              match opcode with
-               | Select -> read_select mode cmd opcode argc lexbuf
+               | { op_module = 002 } -> read_select mode cmd opcode argc lexbuf
                | _ -> read_unknown_function cmd opstr argc lexbuf
              
 

@@ -28,6 +28,7 @@
 #include <caml/fail.h>
 #include <caml/memory.h>
 #include <caml/bigarray.h>
+#include <stdint.h>
 
 
 /* Return a string corresponding to a slice of a Binarray.t */
@@ -102,8 +103,8 @@ CAMLprim value cstring_to_binary_array (value dst_arr, value dst_idx, value dst_
 /* MD5 digest of a Binarray.t */
 
 typedef struct {
-    uint32 buf[4];
-    uint32 bits[2];
+    uint32_t buf[4];
+    uint32_t bits[2];
     unsigned char in[64];
 } MD5Context;
 

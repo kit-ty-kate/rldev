@@ -21,7 +21,7 @@
    Place - Suite 330, Boston, MA  02111-1307, USA.
 *)
 
-(*pp ./pa_matches.cmo pa_macro.cmo *)
+(*pp camlp4.macro *)
 
 open Printf
 open Ulexing
@@ -127,7 +127,7 @@ let get_resstr_key aux lexbuf =
       | [^ " '\"\t\r\n>}"]+ -> set_rv (Text.of_arr (lexeme lexbuf)); get_key lexbuf
       | [">}"] sp -> !lc, !rv
       | eof -> raise End_of_file
-      | _ -> ksprintf failwith "inexhaustive match at %s char %d" __FILE__ (fst __LOCATION__)
+      | _ -> ksprintf failwith "inexhaustive match at %s" __LOC__
   in
   get_key lexbuf
 
@@ -305,7 +305,7 @@ let rec get_token aux : lexbuf -> strtoken =
                   | ")" -> Text.Buf.add_char b ')'; get_opt (if pc = 0 then 0 else pc - 1) lexbuf
                   | [^ "\\\r\n(){"]+ -> Text.Buf.add_array b (lexeme lexbuf); get_opt pc lexbuf
                   | eof -> if aux.term <> `ResStr then unterminated aux; Text.Buf.contents b
-                  | _ -> ksprintf failwith "inexhaustive match at %s char %d" __FILE__ (fst __LOCATION__)
+                  | _ -> ksprintf failwith "inexhaustive match at %s" __LOC__
               in
               let text = get_opt 0 lexbuf in
               Some (KeULexer.call_parser_on_text KeAstParser.just_expression (loc aux) text)
@@ -329,7 +329,7 @@ let rec get_token aux : lexbuf -> strtoken =
                    else if bc > 0 then (Text.Buf.add_array b (lexeme lexbuf); get_arg false (bc - 1) lexbuf)
                    else (Text.Buf.add_char b '-'; Text.Buf.contents b)
               | "{-" -> Text.Buf.add_array b (lexeme lexbuf); get_arg true bc lexbuf
-              | _ -> ksprintf failwith "inexhaustive match at %s char %d" __FILE__ (fst __LOCATION__)
+              | _ -> ksprintf failwith "inexhaustive match at %s" __LOC__
           in
           let iloc = loc aux in
           let text = get_arg false 0 lexbuf in
@@ -396,7 +396,7 @@ let rec get_token aux : lexbuf -> strtoken =
        0xff06-0xff09 (*–*) 0xff0b-0xffff]+
        -> `Text (loc aux, `Dbcs, Text.of_arr (lexeme lexbuf))
 
-    | _ -> ksprintf failwith "inexhaustive match at %s char %d" __FILE__ (fst __LOCATION__)
+    | _ -> ksprintf failwith "inexhaustive match at %s" __LOC__
 
 
 let get_string aux lexbuf =
@@ -468,7 +468,7 @@ let rec lex_resfile_header aux =
 let lex_resstr aux lexbuf =
   let startpos, key = get_resstr_key aux lexbuf in
   let str = get_string aux lexbuf in
-  if DynArray.length str > 0 && (DynArray.last str matches `Space (_, 1)) then DynArray.delete_last str;
+  if DynArray.length str > 0 && (match DynArray.last str with `Space (_, 1) -> true | _ -> false) then DynArray.delete_last str;
   startpos, key, str
 
 (* Process an Rlc-format resource string: resolve anonymous references and add the string
