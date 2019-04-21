@@ -1,0 +1,23 @@
+opam-version: "2.0"
+license: "GPL"
+maintainer: "Kate <kit.ty.kate@disroot.org>"
+authors: "The RLDEV authors"
+homepage: "https://github.com/kit-ty-kate/rldev"
+dev-repo: "git://github.com/kit-ty-kate/rldev.git"
+bug-reports: "https://github.com/kit-ty-kate/rldev/issues"
+synopsis: "An unofficial development toolkit for AVG2000 and RealLive"
+build: [
+  ["sh" "-c" "cd src && ./configure --prefix '%{prefix}%'"]
+  ["sh" "-c" "cd src && omake -j %{jobs}%"]
+]
+install: ["sh" "-c" "cd src && omake install"]
+depends: [
+  "ocaml" {>= "4.02"}
+  "ocamlfind" {build}
+  "omake" {build & >= "0.9.6.8"}
+  "extlib" {>= "1.4"}
+  "ulex"
+  "xml-light"
+  "conf-libpng"
+  "camlp4"
+]
