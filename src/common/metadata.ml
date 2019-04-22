@@ -18,8 +18,6 @@
    Place - Suite 330, Boston, MA  02111-1307, USA.
 *)
 
-INCLUDE "src/common/config.cfg"
-
 open Printf
 open Binarray
 
@@ -74,7 +72,7 @@ let (!!) i =
   s
 
 let to_string ?(ident = "RLdev") encoding (a,b,c,d) =
-  let ver = VERSION *. 100. in
+  let ver = Config_gen.version *. 100. in
   ksprintf (fun s -> !!(String.length s + 4) ^ s)
     "%s%s\x00\
      %s\

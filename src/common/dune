@@ -2,7 +2,7 @@
 (ocamlyacc gameParser kfnParser castParser)
 
 (rule
-  (targets config.cfg)
+  (targets config_gen.ml)
   (deps ../config.ml)
   (action
     (with-stdout-to %{targets} (run ocaml %{deps} %{version:rldev}))))
@@ -25,10 +25,6 @@
   (name rlcmp)
   (wrapped false)
   (modules binarray metadata bytecode game gameTypes gameParser gameLexer rlcmp)
-  (preprocess
-    (per_module
-      ((action (run camlp4 -printer OCaml -parser o -parser Camlp4MacroParser %{input-file})) metadata binarray)))
-  (preprocessor_deps config.cfg)
   (libraries optpp appconfig unix bigarray rlprims))
 
 (library
@@ -46,11 +42,7 @@
 (library
   (name appconfig)
   (wrapped false)
-  (modules avlTree iSet iMap encoding config cp932 cp936 cp949 text textTransforms)
-  (preprocess
-    (per_module
-      ((action (run camlp4 -printer OCaml -parser o -parser Camlp4MacroParser %{input-file})) config)))
-  (preprocessor_deps config.cfg)
+  (modules avlTree iSet iMap encoding config_gen config cp932 cp936 cp949 text textTransforms)
   (libraries optpp cast))
 
 (executable

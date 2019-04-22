@@ -14,9 +14,9 @@ let version = Sys.argv.(1)
 let share = cmd "opam config var share"
 
 let l = [
-  fmt "DEFINE VERSION = %s" version;
-  "DEFINE DEFAULT_ENCODING = \"UTF-8\""; (* TODO: Give back people the possibility to give a custom value for this *)
-  fmt "DEFINE PREFIX = \"%s/rldev/lib\"" share;
+  fmt "let version = %s" version;
+  "let default_encoding = \"UTF-8\""; (* TODO: Give back people the possibility to give a custom value for this *)
+  fmt "let prefix = \"%s/rldev/lib\"" share;
 ]
 
 let () = List.iter print_endline l

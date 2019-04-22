@@ -18,54 +18,11 @@
    Place - Suite 330, Boston, MA  02111-1307, USA.
 *)
 
-INCLUDE "src/common/config.cfg"
+let app_info = { Optpp.default_app_info with Optpp.version = Config_gen.version }
 
-let app_info = { Optpp.default_app_info with Optpp.version = VERSION }
+let default_encoding = Config_gen.default_encoding
 
-let default_encoding = DEFAULT_ENCODING
-
-IFDEF PREFIX THEN
-  let prefix () = PREFIX
-ELSE
-  (* Prefix not specified: try to guess at runtime. *)
-  let prefix =
-    let (//) = Filename.concat in
-    let prefix = ref "" in
-    fun () ->
-      if !prefix = "" then (
-        let home = try Sys.getenv "HOME" with Not_found -> Filename.dirname Sys.argv.(0)
-        and rldir = try Sys.getenv "RLDEV" with Not_found -> "." in
-        
-        (*
-        cliInfo sprintf "HOME=%s" home;
-        cliInfo sprintf "RLDEV=%s" rldir;
-        *)
-
-        (*
-        Optpp.cliWarning (Printf.sprintf "HOME=%s" home);
-        Optpp.cliWarning (Printf.sprintf "RLDEV=%s" rldir);
-        *)
-        
-        prefix :=
-          try
-            List.find
-              (fun s -> Sys.file_exists (s // "reallive.kfn"))
-              [rldir // "lib"; rldir; home; home // "rldev"; home // ".rldev"; 
-               home // "share/rldev"; home // "lib"; home // "rldev/lib"; 
-               home // "share/rldev/lib"; home // ".rldev/lib"; 
-               "/usr/share/rldev"; "/usr/local/share/rldev"; 
-               "/usr/share/rldev/lib"; "/usr/local/share/rldev/lib"]
-          with Not_found ->
-            Optpp.sysError ("Error: unable to locate reallive.kfn.  " ^
-              "Try setting $RLDEV to your RLDev installation directory")
-      );
-      
-      (*
-      Optpp.cliWarning (Printf.sprintf "prefix: %s" !prefix);
-      *)
-      
-      !prefix
-END
+let prefix () = Config_gen.prefix
 
 (*
 Optpp.cliWarning (Printf.sprintf "prefix=%s" (prefix ()))
