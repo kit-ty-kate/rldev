@@ -1,6 +1,12 @@
 (ocamllex gameLexer kfnLexer castLexer)
 (ocamlyacc gameParser kfnParser castParser)
 
+(rule
+  (targets config.cfg)
+  (deps ../config.ml)
+  (action
+    (with-stdout-to %{targets} (run ocaml %{deps}))))
+
 (library
   (name optpp)
   (wrapped false)

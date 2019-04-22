@@ -6,14 +6,9 @@ homepage: "https://github.com/kit-ty-kate/rldev"
 dev-repo: "git://github.com/kit-ty-kate/rldev.git"
 bug-reports: "https://github.com/kit-ty-kate/rldev/issues"
 synopsis: "An unofficial development toolkit for AVG2000 and RealLive"
-build: [
-  ["sh" "-c" "cd src && ./configure --prefix '%{prefix}%'"]
-  ["dune" "build" "-p" name "-j" jobs]
-]
+build: ["dune" "build" "-p" name "-j" jobs]
 depends: [
   "ocaml" {>= "4.02"}
-  "ocamlfind" {build}
-  "omake" {build & >= "0.9.6.8"}
   "dune" {build & >= "1.9"}
   "extlib" {>= "1.4"}
   "ulex"
