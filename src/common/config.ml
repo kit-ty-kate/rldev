@@ -19,7 +19,6 @@
 *)
 
 INCLUDE "src/common/config.cfg"
-INCLUDE "src/VERSION"
 
 let app_info = { Optpp.default_app_info with Optpp.version = VERSION }
 

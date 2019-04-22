@@ -5,7 +5,7 @@
   (targets config.cfg)
   (deps ../config.ml)
   (action
-    (with-stdout-to %{targets} (run ocaml %{deps}))))
+    (with-stdout-to %{targets} (run ocaml %{deps} %{version:rldev}))))
 
 (library
   (name optpp)
@@ -28,7 +28,7 @@
   (preprocess
     (per_module
       ((action (run camlp4 -printer OCaml -parser o -parser Camlp4MacroParser %{input-file})) metadata binarray)))
-  (preprocessor_deps (file ../VERSION))
+  (preprocessor_deps config.cfg)
   (libraries optpp appconfig unix bigarray rlprims))
 
 (library
@@ -50,7 +50,7 @@
   (preprocess
     (per_module
       ((action (run camlp4 -printer OCaml -parser o -parser Camlp4MacroParser %{input-file})) config)))
-  (preprocessor_deps (file config.cfg) (file ../VERSION))
+  (preprocessor_deps config.cfg)
   (libraries optpp cast))
 
 (executable

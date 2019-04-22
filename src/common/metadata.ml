@@ -18,7 +18,7 @@
    Place - Suite 330, Boston, MA  02111-1307, USA.
 *)
 
-INCLUDE "src/VERSION"
+INCLUDE "src/common/config.cfg"
 
 open Printf
 open Binarray
