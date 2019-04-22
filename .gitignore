@@ -2,9 +2,3 @@
 /_build
 .merlin
 /rldev.install
-
-# TODO: Replace the configure script with dune
-# configure artefacts and miscellaneous
-/src/config.inc
-/src/common/config.cfg
-/src/common/mkdatafiles
