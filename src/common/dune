@@ -1,0 +1,53 @@
+(ocamllex gameLexer kfnLexer castLexer)
+(ocamlyacc gameParser kfnParser castParser)
+
+(library
+  (name optpp)
+  (wrapped false)
+  (modules optpp)
+  (libraries extlib))
+
+(library
+  (name rlprims)
+  (wrapped false)
+  (cxx_names lz_comp_rl)
+  (c_names binarray-c get_interpreter_version)
+  (c_library_flags -lstdc++)
+  (modules))
+
+(library
+  (name rlcmp)
+  (wrapped false)
+  (modules binarray metadata bytecode game gameTypes gameParser gameLexer rlcmp)
+  (preprocess
+    (per_module
+      ((action (run camlp4 -printer OCaml -parser o -parser Camlp4MacroParser %{input-file})) metadata binarray)))
+  (preprocessor_deps (file ../VERSION))
+  (libraries optpp appconfig unix bigarray rlprims))
+
+(library
+  (name rlkfn)
+  (wrapped false)
+  (modules kfnTypes kfnParser kfnLexer)
+  (libraries extlib))
+
+(library
+  (name cast)
+  (wrapped false)
+  (modules cast castParser castLexer)
+  (libraries optpp))
+
+(library
+  (name appconfig)
+  (wrapped false)
+  (modules avlTree iSet iMap encoding config cp932 cp936 cp949 text textTransforms)
+  (preprocess
+    (per_module
+      ((action (run camlp4 -printer OCaml -parser o -parser Camlp4MacroParser %{input-file})) config)))
+  (preprocessor_deps (file config.cfg) (file ../VERSION))
+  (libraries optpp cast))
+
+(executable
+  (name mkdatamain)
+  (modules cp932_in cp936_in cp949_in mkdatamain)
+  (libraries appconfig))

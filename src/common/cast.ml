@@ -75,7 +75,7 @@ let init parsefun lexfun filename verbosity =
     let ic = open_in filename in
     if verbosity > 0 then Printf.ksprintf Optpp.sysInfo "Reading CAST: %s" filename;
     try
-      parsefun lexfun (Lexing.from_channel ic);
+      ignore (parsefun lexfun (Lexing.from_channel ic));
       close_in ic
     with
       e -> close_in_noerr ic;

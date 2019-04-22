@@ -1,0 +1,6 @@
+(env
+  (_ (flags (:standard -unsafe-string -warn-error -A -w -27-39-9-3-32-6-52-33-34-35-50))))
+
+(executable
+  (name discover)
+  (libraries dune.configurator))

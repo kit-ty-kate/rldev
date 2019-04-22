@@ -8,13 +8,13 @@ bug-reports: "https://github.com/kit-ty-kate/rldev/issues"
 synopsis: "An unofficial development toolkit for AVG2000 and RealLive"
 build: [
   ["sh" "-c" "cd src && ./configure --prefix '%{prefix}%'"]
-  ["sh" "-c" "cd src && omake -j9999; omake"] # TODO: please fix that
+  ["dune" "build" "-p" name "-j" jobs]
 ]
-install: ["sh" "-c" "cd src && omake install"]
 depends: [
   "ocaml" {>= "4.02"}
   "ocamlfind" {build}
   "omake" {build & >= "0.9.6.8"}
+  "dune" {build & >= "1.9"}
   "extlib" {>= "1.4"}
   "ulex"
   "xml-light"

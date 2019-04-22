@@ -18,8 +18,6 @@
    Place - Suite 330, Boston, MA  02111-1307, USA.
 *)
 
-(*pp camlp4.macro *)
-
 let buffer_size = 4_194_304
   
 let broken = Sys.os_type = "Win32"

@@ -1,0 +1,7 @@
+(executable
+  (name main)
+  (public_name kprl)
+  (preprocess
+    (per_module
+      ((action (run camlp4 -printer OCaml -parser o -parser Camlp4MacroParser %{lib:ulex:pa_ulex.cma} %{input-file})) disassembler archiver)))
+  (libraries optpp appconfig rlkfn ulex rlcmp))

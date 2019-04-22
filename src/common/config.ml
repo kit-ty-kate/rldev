@@ -17,10 +17,9 @@
    this program; if not, write to the Free Software Foundation, Inc., 59 Temple
    Place - Suite 330, Boston, MA  02111-1307, USA.
 *)
-(*pp camlp4.macro *)
 
-INCLUDE "config.cfg"
-INCLUDE "../VERSION"
+INCLUDE "src/common/config.cfg"
+INCLUDE "src/VERSION"
 
 let app_info = { Optpp.default_app_info with Optpp.version = VERSION }
 

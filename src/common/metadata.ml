@@ -18,9 +18,7 @@
    Place - Suite 330, Boston, MA  02111-1307, USA.
 *)
 
-(*pp camlp4.macro *)
-
-INCLUDE "../VERSION"
+INCLUDE "src/VERSION"
 
 open Printf
 open Binarray

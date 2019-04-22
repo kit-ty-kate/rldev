@@ -1,0 +1,6 @@
+(ocamllex lexer)
+
+(executable
+  (name main)
+  (public_name cvtkpacres)
+  (libraries extlib optpp appconfig str))

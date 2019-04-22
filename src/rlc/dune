@@ -1,0 +1,12 @@
+(ocamllex iniLexer)
+(ocamlyacc iniParser keAstParser)
+
+(executable
+  (name main)
+  (public_name rlc)
+  (preprocess
+    (per_module
+      ((action (run camlp4 -printer OCaml -parser o %{lib:ulex:pa_ulex.cma} %{input-file})) keULexer)
+      ((action (run camlp4 -printer OCaml -parser o -parser Camlp4MacroParser %{lib:ulex:pa_ulex.cma} %{input-file})) strLexer)
+      ((action (run camlp4 -printer OCaml -parser o -parser Camlp4MacroParser %{input-file})) compilerFrame function memory rlBabel textout)))
+  (libraries optpp appconfig rlkfn ulex rlcmp))

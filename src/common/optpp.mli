@@ -83,7 +83,7 @@ val display_version : app_info -> unit
 val display_help : app_info -> opt_srcp list -> 'a
 val display_usage : app_info -> unit
 
-val getopt : ?app:app_info -> opt_srcp list -> (string -> 'a) -> (unit -> unit) -> unit
+val getopt : ?app:app_info -> opt_srcp list -> (string -> unit) -> (unit -> unit) -> unit
 
 
 (* Pretty-printing *)

@@ -18,8 +18,6 @@
    Place - Suite 330, Boston, MA  02111-1307, USA.
 *)
 
-(*pp camlp4.macro *)
-
 open Printf
 open KeTypes
 open KeAst
